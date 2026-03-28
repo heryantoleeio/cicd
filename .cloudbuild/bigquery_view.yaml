@@ -11,6 +11,15 @@ steps:
     args: ['validate']
     dir: 'terraform'
 
+  # Verify SQL files are present before planning
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "SQL files found:"
+        ls -la sql/views/
+
   # Step 3: Plan
   - name: 'hashicorp/terraform:1.7'
     entrypoint: 'terraform'

@@ -25,11 +25,13 @@ resource "google_bigquery_dataset" "dataset" {
 
 # 2. Create a BigQuery view
 locals {
-  view_files = fileset("${path.module}/../sql/views", "*.sql")
+  # Use absolute path relative to where terraform is run from
+  sql_dir    = "${path.module}/../sql/views"
+  view_files = fileset(local.sql_dir, "*.sql")
 
   views = {
     for f in local.view_files :
-    trimsuffix(f, ".sql") => file("${path.module}/../sql/views/${f}")
+    trimsuffix(f, ".sql") => file("${local.sql_dir}/${f}")
   }
 }
 
