@@ -1,0 +1,1 @@
+SELECT 1 AS id, CURRENT_DATE() AS order_date

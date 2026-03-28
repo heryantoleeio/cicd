@@ -24,16 +24,24 @@ resource "google_bigquery_dataset" "dataset" {
 }
 
 # 2. Create a BigQuery view
-resource "google_bigquery_table" "my_view" {
-  dataset_id = google_bigquery_dataset.dataset.dataset_id
-  table_id   = "my_view"
+locals {
+  view_files = fileset("${path.module}/../sql/views", "*.sql")
+
+  views = {
+    for f in local.view_files :
+    trimsuffix(f, ".sql") => file("${path.module}/../sql/views/${f}")
+  }
+}
+
+resource "google_bigquery_table" "views" {
+  for_each = local.views
+
+  dataset_id          = google_bigquery_dataset.dataset.dataset_id
+  table_id            = each.key
   deletion_protection = false
 
   view {
-    query          = <<-EOT
-      SELECT
-        1 AS id
-    EOT
+    query          = each.value
     use_legacy_sql = false
   }
 }
