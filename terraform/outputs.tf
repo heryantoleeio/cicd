@@ -1,3 +1,5 @@
-output "view_id" {
-  value = google_bigquery_table.my_view.id
+output "view_ids" {
+  value = {
+    for k, v in google_bigquery_table.views : k => v.id
+  }
 }
