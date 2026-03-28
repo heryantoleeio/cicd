@@ -3,4 +3,4 @@ steps:
     args: ['echo', 'Hello World']
 
 options:
-  logging: NONE
+  logging: CLOUD_LOGGING_ONLY
